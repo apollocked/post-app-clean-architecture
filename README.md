@@ -1,4 +1,4 @@
-# flutter_movies_app
+# Clean Architecture app 
 
 A new Flutter project.
 
