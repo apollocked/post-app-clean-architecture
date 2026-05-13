@@ -1,0 +1,41 @@
+# .gitattributes
+
+# -----------------------------------------------------------------------------
+# 1. LANGUAGE OVERRIDES
+# Treat specific file types as Dart or hide them from statistics
+# -----------------------------------------------------------------------------
+
+# Mark all .dart files as the primary language
+**.dart linguist-detectable=true
+
+# Mark generated files as "generated" so they don't count towards language stats
+**.g.dart linguist-generated=true
+**.freezed.dart linguist-generated=true
+**.template.dart linguist-generated=true
+
+# -----------------------------------------------------------------------------
+# 2. VENDORING & FOLDERS
+# Tell GitHub to ignore these folders when calculating language percentages
+# -----------------------------------------------------------------------------
+
+# Ignore web-related or native setup files that might skew stats to HTML/CSS/C++
+web/** linguist-vendored
+android/** linguist-vendored
+ios/** linguist-vendored
+macos/** linguist-vendored
+linux/** linguist-vendored
+windows/** linguist-vendored
+
+# Ignore localization files if they are large
+**.arb linguist-documentation
+
+# -----------------------------------------------------------------------------
+# 3. LINE ENDINGS
+# Ensure consistent line endings across Windows, Mac, and Linux
+# -----------------------------------------------------------------------------
+
+# Handle line endings automatically
+* text=auto
+
+# Force Dart files to use LF (highly recommended for Flutter)
+**.dart text eol=lf
