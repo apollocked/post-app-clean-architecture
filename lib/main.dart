@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movies_app/features/posts/data/data_sources/api_clint.dart';
-import 'package:flutter_movies_app/features/posts/data/repositories/api_repository.dart';
-import 'package:flutter_movies_app/features/posts/logic/cubit/post_cubit.dart';
-import 'package:flutter_movies_app/features/posts/ui/pages/main_screen.dart';
+import 'package:flutter_posts_app/features/posts/data/data_sources/api_clint.dart';
+import 'package:flutter_posts_app/features/posts/data/repositories/api_repository.dart';
+import 'package:flutter_posts_app/features/posts/logic/cubit/post_cubit.dart';
+import 'package:flutter_posts_app/features/posts/ui/pages/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

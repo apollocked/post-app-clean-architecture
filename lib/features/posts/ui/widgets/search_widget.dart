@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movies_app/core/utils/colors.dart';
-import 'package:flutter_movies_app/features/posts/logic/cubit/post_cubit.dart';
+import 'package:flutter_posts_app/core/utils/colors.dart';
+import 'package:flutter_posts_app/features/posts/logic/cubit/post_cubit.dart';
 
 class SearchWidget extends StatelessWidget {
   const SearchWidget({super.key});

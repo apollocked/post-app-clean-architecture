@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:flutter_movies_app/features/posts/data/data_sources/cache_service.dart';
+import 'package:flutter_posts_app/features/posts/data/data_sources/cache_service.dart';
 
 class ApiClient {
   late Dio dio;

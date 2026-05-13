@@ -1,4 +1,4 @@
-import 'package:flutter_movies_app/features/posts/data/models/post_model.dart';
+import 'package:flutter_posts_app/features/posts/data/models/post_model.dart';
 
 sealed class PostState {}
 

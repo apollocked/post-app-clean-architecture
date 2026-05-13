@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_movies_app/core/utils/colors.dart';
-import 'package:flutter_movies_app/features/posts/data/models/post_model.dart';
-import 'package:flutter_movies_app/features/posts/logic/cubit/post_cubit.dart';
+import 'package:flutter_posts_app/core/utils/colors.dart';
+import 'package:flutter_posts_app/features/posts/data/models/post_model.dart';
 
-Widget successStateWidget(BuildContext context, List<PostModel> posts) {
-  return RefreshIndicator(
-    onRefresh: () => context.read<PostCubit>().loadPost(),
-    color: tealColor,
-    child: Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
+Widget successStateWidget(
+  BuildContext context,
+  List<PostModel> posts,
+  ScrollController scrollController,
+) {
+  return Column(
+    children: [
+      Expanded(
+        child: ListView.builder(
+          controller: scrollController,
+          itemCount: posts.length + 1,
+          itemBuilder: (context, index) {
+            if (posts.length <= index) {
+              return Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: const Center(
+                  child: CircularProgressIndicator(color: tealColor),
+                ),
+              );
+            } else {
               return Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
@@ -61,16 +70,16 @@ Widget successStateWidget(BuildContext context, List<PostModel> posts) {
                   ),
                 ),
               );
-            },
-          ),
+            }
+          },
         ),
+      ),
 
-        const SizedBox(height: 10),
-        Text(
-          "Data provided by local cache fallback",
-          style: TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-      ],
-    ),
+      const SizedBox(height: 10),
+      Text(
+        "Data provided by local cache fallback",
+        style: TextStyle(fontSize: 12, color: Colors.grey),
+      ),
+    ],
   );
 }

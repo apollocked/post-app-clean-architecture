@@ -20,12 +20,13 @@ class CacheService {
 
     _cacheOptions = CacheOptions(
       store: store,
-      policy: CachePolicy.refreshForceCache,
+      policy: CachePolicy.forceCache,
+      hitCacheOnErrorExcept: [401, 403],
       // hitCacheOnErrorExcept is removed.
       // refreshForceCache automatically tries network first,
       // then falls back to cache if the network fails.
       maxStale: const Duration(days: 7),
-      priority: CachePriority.normal, // Optional: define priority
+      priority: CachePriority.high, // Optional: define priority
     );
 
     return _cacheOptions!;

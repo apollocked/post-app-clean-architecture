@@ -1,17 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movies_app/core/utils/colors.dart';
-import 'package:flutter_movies_app/features/posts/logic/cubit/post_cubit.dart';
-import 'package:flutter_movies_app/features/posts/logic/cubit/post_state.dart';
-import 'package:flutter_movies_app/features/posts/ui/widgets/error_widget.dart';
-import 'package:flutter_movies_app/features/posts/ui/widgets/search_widget.dart';
-import 'package:flutter_movies_app/features/posts/ui/widgets/success_widget.dart';
+import 'package:flutter_posts_app/core/utils/colors.dart';
+import 'package:flutter_posts_app/features/posts/logic/cubit/post_cubit.dart';
+import 'package:flutter_posts_app/features/posts/logic/cubit/post_state.dart';
+import 'package:flutter_posts_app/features/posts/ui/widgets/error_widget.dart';
+import 'package:flutter_posts_app/features/posts/ui/widgets/search_widget.dart';
+import 'package:flutter_posts_app/features/posts/ui/widgets/success_widget.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final ScrollController scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    context.read<PostCubit>().loadPost();
+    scrollController.addListener(() {
+      double maxScroll = scrollController.position.maxScrollExtent;
+      double currentScroll = scrollController.position.pixels;
+      double buffer = 100.0;
+      if (maxScroll - currentScroll <= buffer) {
+        if (context.read<PostCubit>().state is! PostLoading) {
+          context.read<PostCubit>().loadPost();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final posts = context.watch<PostCubit>().currentPosts;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -38,12 +67,15 @@ class MainScreen extends StatelessWidget {
             Expanded(
               child: BlocBuilder<PostCubit, PostState>(
                 builder: (context, state) {
-                  if (state is PostLoading) {
+                  if (state is PostLoading && posts.isEmpty) {
                     return const Center(
                       child: CircularProgressIndicator(color: tealColor),
                     );
-                  } else if (state is PostSuccess) {
-                    return successStateWidget(context, state.posts);
+                  }
+
+                  if (state is PostSuccess ||
+                      (state is PostLoading && posts.isNotEmpty)) {
+                    return successStateWidget(context, posts, scrollController);
                   } else if (state is PostError) {
                     return errorStateWidget(context, state.message, tealColor);
                   }
