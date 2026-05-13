@@ -46,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Column(
           children: [
             const SearchWidget(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 6),
             Expanded(
               child: BlocBuilder<PostCubit, PostState>(
                 builder: (context, state) {
@@ -67,11 +67,9 @@ class _MainScreenState extends State<MainScreen> {
                       scrollController,
                     );
                   }
-
                   if (state is PostError) {
                     return Center(child: Text(state.message));
                   }
-
                   return const SizedBox.shrink();
                 },
               ),
