@@ -7,7 +7,7 @@ class PostInitial extends PostState {}
 class PostLoading extends PostState {}
 
 class PostSuccess extends PostState {
-  final PostModel posts;
+  final List<PostModel> posts;
   PostSuccess(this.posts);
 }
 

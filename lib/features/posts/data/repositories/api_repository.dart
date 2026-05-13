@@ -5,13 +5,15 @@ class PostRepository {
   final Dio _dio;
 
   PostRepository(this._dio);
-  Future<PostModel> fetchPost(int id) async {
+  Future<List<PostModel>> fetchPosts() async {
     try {
-      final response = await _dio.get('/posts/$id');
-      return PostModel.fromJson(response.data);
+      final response = await _dio.get('/posts');
+
+      // FIX: response.data is a List<dynamic>, not a List<PostModel>
+      final List<dynamic> data = response.data;
+
+      return data.map((json) => PostModel.fromJson(json)).toList();
     } catch (e) {
-      // FIX 4: Always print the error 'e' during development!
-      print("Repository Error: $e");
       throw Exception("Could not load data");
     }
   }

@@ -15,7 +15,7 @@ Widget errorStateWidget(BuildContext context, String message, Color color) {
         ),
         const SizedBox(height: 24),
         ElevatedButton.icon(
-          onPressed: () => context.read<PostCubit>().loadPost(1),
+          onPressed: () => context.read<PostCubit>().loadPost(),
           icon: const Icon(Icons.replay_rounded),
           label: const Text("Try Again"),
           style: ElevatedButton.styleFrom(
