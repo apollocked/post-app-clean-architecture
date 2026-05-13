@@ -19,15 +19,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<PostCubit>().loadPost();
+    scrollControlerListener();
+  }
+
+  void scrollControlerListener() {
     scrollController.addListener(() {
+      final cubit = context.read<PostCubit>();
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
-      double buffer = 100.0;
-      if (maxScroll - currentScroll <= buffer) {
-        if (context.read<PostCubit>().state is! PostLoading) {
-          context.read<PostCubit>().loadPost();
-        }
+      if (cubit.isFetching || cubit.state is PostError) return;
+      if (maxScroll - currentScroll <= 100.0) {
+        cubit.loadPost();
       }
     });
   }
@@ -67,14 +69,12 @@ class _MainScreenState extends State<MainScreen> {
             Expanded(
               child: BlocBuilder<PostCubit, PostState>(
                 builder: (context, state) {
-                  if (state is PostLoading && posts.isEmpty) {
+                  if (state is PostLoading) {
                     return const Center(
                       child: CircularProgressIndicator(color: tealColor),
                     );
                   }
-
-                  if (state is PostSuccess ||
-                      (state is PostLoading && posts.isNotEmpty)) {
+                  if (state is PostSuccess) {
                     return successStateWidget(context, posts, scrollController);
                   } else if (state is PostError) {
                     return errorStateWidget(context, state.message, tealColor);

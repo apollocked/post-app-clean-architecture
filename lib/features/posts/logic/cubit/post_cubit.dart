@@ -9,36 +9,50 @@ class PostCubit extends Cubit<PostState> {
   int limit = 10;
   List<PostModel> currentPosts = [];
   bool isFetching = false;
+  bool isFirstLoad = true; // Track the very first startup
 
   PostCubit(this.repository) : super(PostInitial()) {
     loadPost();
   }
 
   Future<void> loadPost() async {
-    if (isFetching || currentPosts.length >= 100) {
-      return; // the number of the posts is 100 in the api
-    }
-    if (state is PostLoading) return;
-    final currenState = state;
-    if (currenState is PostSuccess) {
-      currentPosts = currenState.posts;
-    }
+    if (isFetching || currentPosts.length >= 100) return;
+
     isFetching = true;
-    emit(PostLoading());
+    if (isFirstLoad) {
+      emit(PostLoading());
+    }
 
     try {
       final results = await Future.wait([
         repository.fetchPosts(startIndex, limit),
         Future.delayed(const Duration(milliseconds: 700)),
       ]);
+      final List<PostModel> newPosts = results[0];
       startIndex += limit;
-
-      currentPosts.addAll(results[0]);
+      currentPosts.addAll(newPosts);
+      isFirstLoad = false;
       emit(PostSuccess(List.from(currentPosts)));
     } catch (e) {
-      emit(PostError("Connection Lost"));
+      if (currentPosts.isEmpty) {
+        emit(PostError("Connection Lost"));
+      } else {
+        emit(PostSuccess(List.from(currentPosts)));
+      }
     } finally {
       isFetching = false;
+    }
+  }
+
+  Future<void> searchPost(int query) async {
+    emit(PostLoading());
+    if (query > 0 && query < currentPosts.length) {
+      currentPosts = currentPosts
+          .where((element) => element.id == query)
+          .toList();
+      emit(PostSuccess(List.from(currentPosts)));
+    } else {
+      emit(PostError("Post not found"));
     }
   }
 }

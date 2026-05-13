@@ -11,7 +11,7 @@ class SearchWidget extends StatelessWidget {
     return TextField(
       onSubmitted: (value) {
         if (value.isNotEmpty) {
-          context.read<PostCubit>().loadPost();
+          context.read<PostCubit>().searchPost(int.parse(value.trim()));
         } else {
           context.read<PostCubit>().loadPost();
         }
